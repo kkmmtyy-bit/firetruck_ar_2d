@@ -3,32 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>消防車AR（2D画像版 / AR.js × A‑Frame）</title>
-  <!-- A‑Frame -->
+  <title>消防車AR（2Dデバッグ版）</title>
+  <!-- A‑Frame / AR.js（CDN） -->
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
-  <!-- AR.js（A‑Frame用：marker & location対応） -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  <style>
-    body{margin:0;overflow:hidden;background:#000}
-    .hint{position:fixed;left:0;right:0;bottom:0;padding:.65em 1em;background:rgba(0,0,0,.55);color:#fff;font:14px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Hiragino Sans',Meiryo,system-ui,sans-serif}
-    .hint b{color:#4FC3F7}
-  </style>
+  <style>body{margin:0;overflow:hidden;background:#000}</style>
 </head>
 <body>
   <a-scene embedded arjs>
-    <!-- 既定の HIRO マーカーを使用 -->
+    <!-- 画像を事前に読み込んで ID を付与 -->
+    <a-assets>
+      <img id="truck" src="assets/firetruck.png">
+    </a-assets>
+
+    <!-- HIRO マーカー -->
     <a-marker preset="hiro">
-      <!-- 2D画像（平面）として消防車PNGを表示 -->
-      <a-image src="assets/firetruck.png"
+      <!-- まずは“立て看板”として正面表示（rotation 0 0 0）
+           透過PNGなら transparent/alphaTest を併用、両面表示で裏面の黒さを回避 -->
+      <a-image src="#truck"
                position="0 0 0"
-               rotation="-90 0 0"
-               width="6" height="2.4">
+               rotation="0 0 0"
+               width="6" height="2.4"
+               material="transparent:true; alphaTest:0.5; side:double">
       </a-image>
+
+      <!-- ガイド：床（消してOK） -->
+      <a-plane position="0 0 0" rotation="-90 0 0" width="3" height="3" color="#444"></a-plane>
     </a-marker>
+
     <a-entity camera></a-entity>
   </a-scene>
-  <div class="hint">
-    4f8 撮影は <b>スクリーンショット</b> でOK／見えづらい時は明るい場所で <b>HIRO</b> マーカーを正面からかざしてください。
+
+  <div class="hint" style="position:fixed;left:0;right:0;bottom:0;padding:.65em 1em;background:rgba(0,0,0,.55);color:#fff;font:14px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Hiragino Sans',Meiryo,system-ui,sans-serif">
+    📸 撮影は <b>スクリーンショット</b> でOK／見えづらい時は明るい場所で <b>HIRO</b> マーカーを正面からかざしてください。
   </div>
 </body>
 </html>
