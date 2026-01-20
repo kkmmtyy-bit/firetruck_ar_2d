@@ -3,36 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>消防車AR（2D／先読みID参照・確実版）</title>
-  <!-- ライブラリ -->
+  <title>消防車AR（自動アスペクト調整）</title>
   <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   <style>body{margin:0;overflow:hidden;background:#000}</style>
 </head>
 <body>
   <a-scene embedded arjs>
-    <!-- 画像を“先読み”し、id=truck を定義 -->
     <a-assets>
-      <img id="truck" src="assets/9022824d14.png" crossorigin="anonymous">
+      <img id="truck" src="assets/9022824d14.png">
     </a-assets>
 
-    <!-- HIRO マーカー -->
     <a-marker preset="hiro">
-      <!-- まずは立て看板として正面表示（rotation: 0 0 0）
-           透過PNGなら transparent/alphaTest、両面描画で裏面の黒を回避 -->
-      <a-image src="#truck"
-　　　　　　　　position="0 0 0"
-               rotation="90 180 0"
-               width="8" height="3.333"
-               material="transparent:true; alphaTest:0.05; side:double">
-      </a-image>
-
-      <!-- デバッグ用ガイド平面は一旦“外す”
-      <a-plane position="0 0 0" rotation="-90 0 0" width="3" height="3" color="#444"></a-plane>
-      -->
+      <a-image id="truckImg"
+               src="#truck"
+               position="0 0 0"
+               rotation="-90 180 0"
+               width="8"
+　　　　　　　　material="transparent:true; alphaTest:0.05; side:double"></a-image>
     </a-marker>
-
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script>
+    // 画像が読み込まれたら自然サイズから高さを自動算出
+    document.querySelector('#truck').addEventListener('load', function(){
+      const img = this; // <img id="truck">
+      const aspect = img.naturalHeight / img.naturalWidth; // 高さ/幅
+      const imageEl = document.querySelector('#truckImg');
+      const w = parseFloat(imageEl.getAttribute('width')) || 6; // 既定幅
+      imageEl.setAttribute('height', (w * aspect).toFixed(3));
+    });
+  </script>
 </body>
 </html>
+``
